@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"/>
+
+    <bean id="parentDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="maxActive" value="${ds.maxActive}"/>
+        <property name="initialSize" value="${ds.initialSize}"/>
+        <property name="maxWait" value="${ds.maxWait}"/>
+        <property name="minIdle" value="${ds.minIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${ds.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${ds.minEvictableIdleTimeMillis}"/>
+        <property name="validationQuery" value="${ds.validationQuery}"/>
+        <property name="testWhileIdle" value="${ds.testWhileIdle}"/>
+        <property name="testOnBorrow" value="${ds.testOnBorrow}"/>
+        <property name="testOnReturn" value="${ds.testOnReturn}"/>
+        <property name="poolPreparedStatements" value="${ds.poolPreparedStatements}"/>
+        <property name="maxOpenPreparedStatements" value="${ds.maxOpenPreparedStatements}"/>
+    </bean>
+    <import resource="classpath:spring-jdbc-system.xml"/>
+
+</beans>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.1.xsd  ">
+
+    <context:annotation-config/>
+    <context:property-placeholder location="classpath:kingdee.properties" ignore-unresolvable="true"/>
+    <bean id ="apiProperty" class="gy.ecerp.admin.util.ApiProperty">
+        <property name="kingdeeUrl" value="${kingdee.api.url}"/>
+        <property name="clientId" value="${kingdee.clientid}"/>
+        <property name="clientSecret" value="${kingdee.clientsecret}"/>
+    </bean>
+
+    <import resource="classpath:spring-jdbc.xml"/>
+    <context:component-scan base-package="gy.ecerp.admin.jms"/>
+    <bean class="gy.ecerp.admin.util.SpringUtil"/>
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login"/>
+        <property name="successUrl" value="/index.jsp"/>
+        <property name="unauthorizedUrl" value="/login"/>
+        <property name="filterChainDefinitions">
+            <value>
+                /* = authc
+                /admin/** = anon
+                /merchant/** = authc
+                /mortgage/** = authc
+                /ocs_merchant/** = authc
+            </value>
+        </property>
+    </bean>
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="myRealm"/>
+    </bean>
+    <bean id="myRealm" class="gy.ecerp.admin.shiro.TenantRealm"/>
+    <!-- 文件上传 -->
+    <!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>-->
+
+    <!-- 文件上传 -->
+    <!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>-->
+    <bean id="multipartResolver" class="gy.ecerp.admin.controller.upload.CustomMultipartResolver">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <!-- 指定所上传文件的总大小不能超过5M。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
+        <property name="maxUploadSize" value="5000000"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertiesFactoryBean" id="tenantGrayscaleURL">
+        <property name="locations">
+            <list>
+                <value>classpath*:tenantGrayscaleURL.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer" id="propertyConfigurer">
+        <property name="properties" ref="tenantGrayscaleURL">
+        </property></bean>
+</beans>

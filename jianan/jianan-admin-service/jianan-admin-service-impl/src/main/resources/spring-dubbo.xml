@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:dubbo.properties" ignore-unresolvable="true"/>
+
+    <dubbo:application name="jianan_admin_service"/>
+    <dubbo:registry id="defaultRegistry" address="${registry.address}"/>
+    <dubbo:consumer check="${dubbo.reference.check:false}" registry="defaultRegistry"/>
+    <dubbo:protocol name="dubbo" port="20881" />
+
+    <dubbo:provider cluster="${default.dubbo.provider.cluster:failfast}" />
+
+    <!--consumer-->
+
+    <!--provider-->
+    <dubbo:service interface="com.jianan.admin.service.api.system.SysFunctionMenuService" ref="sysFunctionMenuServiceImpl" delay="-1"/>
+</beans>
+

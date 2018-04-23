@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jianan.admin.service.dao.system.SysFunctionMenuDao">
+    <resultMap id="ResultMap" type="SysFunctionMenu">
+        <result property="id" column="id"/>
+        <result property="createDate" column="create_date"/>
+        <result property="modifyDate" column="modify_date"/>
+        <result property="version" column="version"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="note" column="note"/>
+        <result property="pid" column="pid"/>
+        <result property="url" column="url"/>
+        <result property="order" column="order"/>
+        <result property="level" column="level"/>
+        <result property="leaf" column="leaf"/>
+    </resultMap>
+
+    <select id="create" parameterType="SysFunctionMenu">
+        insert into sys_function_menu
+		(create_date, code, name, note, pid, url, `order`, level, leaf)
+		values
+		(now(), #{code}, #{name}, #{note}, #{pid}, #{url}, #{order}, #{level}, #{leaf})
+    </select>
+</mapper>

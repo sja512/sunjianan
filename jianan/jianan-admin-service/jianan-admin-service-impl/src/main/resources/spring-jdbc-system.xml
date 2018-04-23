@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+
+
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+    <bean id="admin_source" parent="parentDataSource">
+        <property name="url">
+            <value>${jdbc.admin.url}</value>
+        </property>
+        <property name="username">
+            <value>${jdbc.admin.username}</value>
+        </property>
+        <property name="password">
+            <value>${jdbc.admin.password}</value>
+        </property>
+    </bean>
+
+    <bean id="sqlSessionFactoryAdmin" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="admin_source"/>
+        <property name="typeAliasesPackage" value="com.jianan.admin.service.entity"/>
+        <property name="mapperLocations" value="classpath:/sqlmap/system/*Mapper.xml"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryAdmin"/>
+        <property name="basePackage" value="com.jianan.admin.service.dao"/>
+        <!--<property name="annotationClass" value="com.jianan.admin.service.mybatis.MyBatisRepository"/>-->
+    </bean>
+
+    <bean id="txAdmin"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="admin_source"/>
+        <qualifier value="admin"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="txAdmin"/>
+
+</beans>
